@@ -4,6 +4,7 @@ import rospy
 
 from geometry_msgs.msg import Twist
 
+
 def drive():
     # Drive publisher
     pub_drive = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
@@ -17,11 +18,12 @@ def drive():
 
     # Paramaters
     speed = rospy.get_param("~speed", 0.5)
-    max_duration = rospy.get_param("~duration", 3)
+    max_duration = rospy.get_param("~duration", 5)
     t_start = rospy.Time.now()
     stop = False
 
-    rospy.loginfo("Rotating robot at speed %lf for %lf seconds", speed, max_duration)
+    rospy.loginfo("Rotating robot at speed %lf for %lf seconds",
+                  speed, max_duration)
 
     # Periodically publish the drive command to ensure drive continues
     rate = rospy.Rate(10)
@@ -29,7 +31,7 @@ def drive():
         cmd.angular.z = speed
         pub_drive.publish(cmd)
         rate.sleep()
-        
+
         # Check time
         t_now = rospy.Time.now()
         if t_now - t_start > rospy.Duration(max_duration):
@@ -39,6 +41,7 @@ def drive():
     rospy.loginfo("Rotating finished - stopping robot")
     cmd.angular.z = 0
     pub_drive.publish(cmd)
+
 
 # Short ROS Node method
 if __name__ == '__main__':

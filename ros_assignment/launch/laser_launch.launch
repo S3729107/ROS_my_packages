@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="ros_assignment" type="laser_info.py" name="scan_values" output="screen">
+        
+    </node>
+</launch>
