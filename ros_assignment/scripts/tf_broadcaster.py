@@ -1,24 +1,34 @@
-#!/usr/bin/env python  
-import roslib
-roslib.load_manifest('learning_tf')
+#! /usr/bin/env python
+
+from tf import TransformBroadcaster
 import rospy
+from rospy import Time
 
-import tf
-import turtlesim.msg
 
-def handle_turtle_pose(msg, turtlename):
-    br = tf.TransformBroadcaster()
-    br.sendTransform((msg.x, msg.y, 0),
-                     tf.transformations.quaternion_from_euler(0, 0, msg.theta),
-                     rospy.Time.now(),
-                     turtlename,
-                     "world")
+def main():
+    rospy.init_node('tf_broadcaster')
+
+    publisher = TransformBroadcaster()
+
+    translation = (0.0, 0.0, 0.0)
+    rotation = (0.0, 0.0, 0.0, 1.0)
+    rate = rospy.Rate(5)  # 5hz
+
+    x, y = 0.0, 0.0
+
+    while not rospy.is_shutdown():
+        if x >= 2:
+            x, y = 0.0, 0.0
+
+        x += 0.1
+        y += 0.1
+
+        translation = (x, y, 0.0)
+
+        publisher.sendTransform(translation, rotation,
+                                Time.now(), 'ignite_robot', '/world')
+        rate.sleep()
+
 
 if __name__ == '__main__':
-    rospy.init_node('turtle_tf_broadcaster')
-    turtlename = rospy.get_param('~turtle')
-    rospy.Subscriber('/%s/pose' % turtlename,
-                     turtlesim.msg.Pose,
-                     handle_turtle_pose,
-                     turtlename)
-    rospy.spin()
+    main()
