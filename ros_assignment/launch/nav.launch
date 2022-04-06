@@ -1,0 +1,12 @@
+<launch>
+
+    <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find test_env)/$(arg scenario)/occupancy.yaml">
+        <param name="frame_id" value="map"/>
+    </node>  -->
+
+    <node name="find_target_edge" pkg="ros_assignment" type="find_target_edge.py" output="screen" >
+        <!-- <param name="speed" value="0.5" />
+        <param name="duration" value="5" /> -->
+    </node>
+
+</launch>
